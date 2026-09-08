@@ -1,4 +1,5 @@
 const ApiClient = require('../apiClient/ApiClient');
+const config = require('../config/environment');
 
 class UserService {
   constructor(request) {
@@ -7,7 +8,7 @@ class UserService {
 
   async getUsers() {
     return await this.apiClient.get(
-      'https://reqres.in/api/users?page=2'
+      `${config.baseUrl}/users?page=2`
     );
   }
 }
