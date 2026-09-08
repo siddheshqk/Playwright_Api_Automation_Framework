@@ -1,9 +1,10 @@
 const { test, expect } = require('@playwright/test');
+const UserService = require('../../services/UserService');
 
 test('Get users', async ({ request }) => {
-  const response = await request.get(
-    'https://reqres.in/api/users?page=2'
-  );
+  const userService = new UserService(request);
+
+  const response = await userService.getUsers();
 
   expect(response.status()).toBe(200);
 
