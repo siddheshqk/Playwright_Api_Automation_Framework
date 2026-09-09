@@ -1,3 +1,4 @@
+import { defineConfig, devices } from '@playwright/test';
 const ApiClient = require('../apiClient/ApiClient');
 const config = require('../config/environment');
 
