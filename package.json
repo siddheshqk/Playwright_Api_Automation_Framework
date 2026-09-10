@@ -6,14 +6,25 @@
   "directories": {
     "test": "tests"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:github": "playwright test tests/github",
+    "report:playwright": "playwright show-report reports/playwright-html",
+    "report:allure:generate": "allure generate allure-results --clean -o allure-report",
+    "report:allure:open": "allure open allure-report",
+    "report:allure": "allure serve allure-results",
+    "allure:github": "playwright test tests/github && allure generate allure-results --clean -o allure-report && allure open allure-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.63.0",
-    "@types/node": "^26.5.0"
+    "@types/node": "^26.5.0",
+    "ajv": "^8.20.0",
+    "allure-commandline": "^2.43.0",
+    "allure-playwright": "^3.12.1"
   },
   "dependencies": {
     "dotenv": "^17.4.2"

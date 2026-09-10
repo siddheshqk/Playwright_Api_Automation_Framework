@@ -1,13 +1,7 @@
 const ApiClient = require("../apiClient/ApiClient");
 const env = require("../config/environment");
-const now = new Date();
+const logMessage = require("../utils/loggerutil.js");
 
-const repoName =
-  `dummy-${now.getFullYear()
-  }${String(now.getMonth() + 1).padStart(2, "0")
-  }${String(now.getDate()).padStart(2, "0")
-  }-${Date.now().toString().slice(-5)
-  }`;
 // const repoName = `dummy-${Date.now()}`;
 class GithubService {
   constructor(request) {
@@ -22,7 +16,8 @@ class GithubService {
     }
     );
   }
-  async getRepositorycurrent() {
+  async getRepositorycurrent(repoName) {
+    logMessage(`getting Repository: ${repoName}`);
     return await this.apiClient.get(`${env.githubBaseUrl}/repos/${env.githubUsername}/${repoName}`, {
       headers: {
         Authorization: `Bearer ${env.githubToken}`,
@@ -32,7 +27,8 @@ class GithubService {
     );
   }
 
-  async createRepository() {
+  async createRepository(repoName) {
+    logMessage(`Repository Created: ${repoName}`);
     return await this.apiClient.post(`${env.githubBaseUrl}/user/repos`, {
       headers: {
         Authorization: `Bearer ${env.githubToken}`,
@@ -47,7 +43,8 @@ class GithubService {
     });
   }
 
-  async DeleteRepository() {
+  async DeleteRepository(repoName) {
+    logMessage(`Deleting Repository: ${repoName}`);
     return await this.apiClient.delete(`${env.githubBaseUrl}/repos/${env.githubUsername}/${repoName}`, {
       headers: {
         Authorization: `Bearer ${env.githubToken}`,
@@ -56,6 +53,24 @@ class GithubService {
     }
     );
   }
+  async getAllRepos() {
+    logMessage("Fetching all repositories...");
+    const response = await this.apiClient.get(
+      `${env.githubBaseUrl}/user/repos?per_page=100&affiliation=owner`, // Add params
+      {
+        headers: {
+          Authorization: `Bearer ${env.githubToken}`,
+          Accept: "application/vnd.github+json"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      logMessage(`ERROR: Failed to fetch repos - ${response.status}`);
+    }
+
+    return response;
+  }
 }
 
-module.exports = { GithubService, repoName }
+module.exports = { GithubService }
