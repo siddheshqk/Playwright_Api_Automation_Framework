@@ -9,7 +9,7 @@ class UserService {
 
   async getUsers() {
     return await this.apiClient.get(
-      `${config.baseUrl}/users?page=2`
+      `${config.reqresBaseUrl}/users?page=2`
     );
   }
 }
