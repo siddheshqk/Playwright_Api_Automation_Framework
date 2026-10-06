@@ -1,0 +1,55 @@
+name: API Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    name: API Test Run
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      CI: true
+      NODE_ENV: test
+      # Add your required secrets here if needed:
+      # BASE_URL: ${{ secrets.BASE_URL }}
+      # API_KEY: ${{ secrets.API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run API tests
+        run: npx playwright test --project=api
+
+      - name: Upload API test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-results
+          path: |
+            reports/playwright-html/
+            allure-results/
+            test-results/
+          if-no-files-found: ignore
